@@ -1,22 +1,34 @@
 function recupererGrilleJoueur() {
-  const cellules = document.querySelectorAll('.cellule');
-  const grille = [];
-  for (let i = 0; i < 9; i++) {
-    grille[i] = new Array(9).fill(0);
+  var cellules = document.querySelectorAll('.cellule');
+  var grille = [];
+  var i, j;
+
+  for (i = 0; i < 9; i++) {
+    grille[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   }
-  cellules.forEach((cellule, index) => {
-    const i = Math.floor(index / 9);
-    const j = index % 9;
-    const valeur = parseInt(cellule.textContent);
-    grille[i][j] = isNaN(valeur) ? 0 : valeur;
-  });
+
+  for (i = 0; i < cellules.length; i++) {
+    var cellule = cellules[i];
+    var ligne = parseInt(cellule.dataset.row, 10);
+    var col = parseInt(cellule.dataset.col, 10);
+    var valeur = parseInt(cellule.textContent, 10);
+    if (isNaN(valeur)) valeur = 0;
+    grille[ligne][col] = valeur;
+  }
+
   return grille;
 }
 
 function contientChiffres1a9SansDoublon(tab) {
   if (tab.length !== 9) return false;
-  if (tab.some(n => n < 1 || n > 9)) return false;
-  return new Set(tab).size === 9;
+
+  var i;
+  for (i = 0; i < 9; i++) {
+    if (tab[i] < 1 || tab[i] > 9) return false;
+  }
+
+  var ensemble = new Set(tab);
+  return ensemble.size === 9;
 }
 
 function verifierLigne(grille, indexLigne) {
@@ -24,68 +36,128 @@ function verifierLigne(grille, indexLigne) {
 }
 
 function verifierColonne(grille, indexColonne) {
-  const col = [];
-  for (let i = 0; i < 9; i++) {
+  var col = [];
+  var i;
+  for (i = 0; i < 9; i++) {
     col.push(grille[i][indexColonne]);
   }
   return contientChiffres1a9SansDoublon(col);
 }
 
 function verifierRegion(grille, startLigne, startColonne) {
-  const valeurs = [];
-  for (let l = 0; l < 3; l++) {
-    for (let c = 0; c < 3; c++) {
+  var valeurs = [];
+  var l, c;
+  for (l = 0; l < 3; l++) {
+    for (c = 0; c < 3; c++) {
       valeurs.push(grille[startLigne + l][startColonne + c]);
     }
   }
   return contientChiffres1a9SansDoublon(valeurs);
 }
 
-function verifierGrilleComplete() {
-  const g = recupererGrilleJoueur();
-
-  for (let i = 0; i < 9; i++) {
-    if (!verifierLigne(g, i)) return false;
-    if (!verifierColonne(g, i)) return false;
+function resetColors() {
+  var cellules = document.querySelectorAll('.cellule');
+  var i;
+  for (i = 0; i < cellules.length; i++) {
+    cellules[i].style.backgroundColor = '';
+    cellules[i].style.color = '';
   }
+}
 
-  for (let l = 0; l < 9; l += 3) {
-    for (let c = 0; c < 9; c += 3) {
-      if (!verifierRegion(g, l, c)) return false;
+function surlignerErreurs() {
+  resetColors();
+
+  var cellules = document.querySelectorAll('.cellule');
+  var i, j;
+
+  for (i = 0; i < cellules.length; i++) {
+    var cellule = cellules[i];
+    var valeur = cellule.textContent.trim();
+
+    if (!/^[1-9]$/.test(valeur)) continue;
+
+    var row = parseInt(cellule.dataset.row, 10);
+    var col = parseInt(cellule.dataset.col, 10);
+    var erreur = false;
+
+    for (j = 0; j < cellules.length; j++) {
+      var autre = cellules[j];
+      if (autre === cellule) continue;
+
+      var v2 = autre.textContent.trim();
+      if (v2 !== valeur) continue;
+
+      var r2 = parseInt(autre.dataset.row, 10);
+      var c2 = parseInt(autre.dataset.col, 10);
+
+      var memeLigne = row === r2;
+      var memeCol = col === c2;
+      var memeRegion =
+        Math.floor(row / 3) === Math.floor(r2 / 3) &&
+        Math.floor(col / 3) === Math.floor(c2 / 3);
+
+      if (memeLigne || memeCol || memeRegion) {
+        erreur = true;
+        autre.style.backgroundColor = '#b7d4e4';
+      }
+    }
+
+    if (erreur) {
+      cellule.style.backgroundColor = '#f7c5c5';
+      cellule.style.color = '#c00000';
     }
   }
-
-  return true;
 }
 
 function initialiserSaisieCellules() {
-  const cellules = document.querySelectorAll('.cellule');
-  cellules.forEach(cellule => {
-    cellule.addEventListener('input', () => {
-      let t = cellule.textContent.replace(/\s/g, '');
-      if (t.length > 1) t = t[0];
-      if (!/^[1-9]$/.test(t)) t = '';
-      cellule.textContent = t;
-    });
-  });
+  var cellules = document.querySelectorAll('.cellule');
+  var i;
+
+  for (i = 0; i < cellules.length; i++) {
+    var cellule = cellules[i];
+
+    if (!cellule.classList.contains('fixe')) {
+      cellule.contentEditable = 'true';
+
+      cellule.addEventListener('input', function () {
+        var txt = this.textContent.replace(/\s/g, '');
+        if (txt.length > 1) txt = txt.charAt(0);
+        if (!/^[1-9]$/.test(txt)) txt = '';
+        this.textContent = txt;
+        surlignerErreurs();
+      });
+    }
+  }
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {
-  const grilleSudoku = document.getElementById('grille-sudoku');
+document.addEventListener('DOMContentLoaded', function () {
+  var grilleSudoku = document.getElementById('grille-sudoku');
+  var i, j;
 
-  for (let i = 0; i < 9; i++) {
-    const bloc3x3 = document.createElement('div');
+  for (i = 0; i < 9; i++) {
+    var bloc3x3 = document.createElement('div');
     bloc3x3.classList.add('grille-3x3');
 
-    for (let j = 0; j < 9; j++) {
-      const cellule = document.createElement('div');
+    for (j = 0; j < 9; j++) {
+      var cellule = document.createElement('div');
       cellule.classList.add('cellule');
-      cellule.contentEditable = 'true';
+
+      var blocLigne = Math.floor(i / 3);
+      var blocCol = i % 3;
+      var cellLigne = Math.floor(j / 3);
+      var cellCol = j % 3;
+      var ligne = blocLigne * 3 + cellLigne;
+      var col = blocCol * 3 + cellCol;
+
+      cellule.dataset.row = ligne;
+      cellule.dataset.col = col;
 
       if (i === 0 && j === 0) {
         cellule.textContent = '1';
+        cellule.classList.add('fixe');
       } else if (i === 0 && j === 2) {
         cellule.textContent = '3';
+        cellule.classList.add('fixe');
       }
 
       bloc3x3.appendChild(cellule);
@@ -95,10 +167,5 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   initialiserSaisieCellules();
-  console.log('Grille Sudoku générée avec succès !');
+  surlignerErreurs();
 });
-
-function verifierSudoku() {
-  const valide = verifierGrilleComplete();
-  alert(valide ? 'Sudoku correct !' : 'Sudoku incorrect');
-}
