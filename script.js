@@ -11,6 +11,7 @@ var baseSolution = [
 ];
 
 var solutions = [];
+var currentSolution = null;
 
 function transformerNombre(n, type) {
   if (type === 0) {
@@ -197,6 +198,21 @@ function genererIndicesAleatoires() {
   return fixe;
 }
 
+function afficherSolution() {
+  if (!currentSolution) return;
+  var cellules = document.querySelectorAll('.cellule');
+  var i;
+  for (i = 0; i < cellules.length; i++) {
+    var cellule = cellules[i];
+    var row = parseInt(cellule.dataset.row, 10);
+    var col = parseInt(cellule.dataset.col, 10);
+    cellule.textContent = String(currentSolution[row][col]);
+    cellule.classList.add('fixe');
+    cellule.contentEditable = 'false';
+  }
+  resetColors();
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   creerSolutions();
 
@@ -204,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var i, j;
 
   var indexSolution = Math.floor(Math.random() * 4);
-  var solution = solutions[indexSolution];
+  currentSolution = solutions[indexSolution];
 
   var fixe = genererIndicesAleatoires();
 
@@ -227,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
       cellule.dataset.col = col;
 
       if (fixe[ligne][col]) {
-        cellule.textContent = String(solution[ligne][col]);
+        cellule.textContent = String(currentSolution[ligne][col]);
         cellule.classList.add('fixe');
       }
 
