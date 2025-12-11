@@ -1,8 +1,8 @@
 body {
-    /* Utiliser Flexbox sur le body pour centrer le tout verticalement et horizontalement */
+
     display: flex;
-    flex-direction: column; /* Aligner les éléments (h1, grille) en colonne */
-    align-items: center; /* Centrer horizontalement tout le contenu du body */
+    flex-direction: column;
+    align-items: center;
     font-family: Arial, sans-serif;
 }
 
@@ -27,14 +27,15 @@ body {
 }
 
 .cellule {
-    /* Bordures fines à l'intérieur des sous-blocs */
+
     border: 1px solid #ccc;
     
-    /* Centrer le contenu (le chiffre) dans chaque cellule */
+
     display: flex;
-    justify-content: center; /* Horizontalement */
-    align-items: center; /* Verticalement */
+    justify-content: center;
+    align-items: center;
     
     font-size: 20px;
     font-weight: bold;
 }
+
