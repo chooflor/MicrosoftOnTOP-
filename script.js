@@ -279,4 +279,49 @@ document.addEventListener('keydown', function (e) {
   e.preventDefault();
   var suivante = document.querySelector('.cellule[data-row="' + row + '"][data-col="' + col + '"]');
   if (suivante) suivante.focus();
+  function refreshGrille() {
+    var grilleSudoku = document.getElementById('grille-sudoku');
+    grilleSudoku.innerHTML = "";
+
+    creerSolutions();
+
+    var indexSolution = Math.floor(Math.random() * 4);
+    currentSolution = solutions[indexSolution];
+
+    var fixe = genererIndicesAleatoires();
+    var i, j;
+
+    for (i = 0; i < 9; i++) {
+        var bloc3x3 = document.createElement('div');
+        bloc3x3.classList.add('grille-3x3');
+
+        for (j = 0; j < 9; j++) {
+            var cellule = document.createElement('div');
+            cellule.classList.add('cellule');
+
+            var blocLigne = Math.floor(i / 3);
+            var blocCol = i % 3;
+            var cellLigne = Math.floor(j / 3);
+            var cellCol = j % 3;
+            var ligne = blocLigne * 3 + cellLigne;
+            var col = blocCol * 3 + cellCol;
+
+            cellule.dataset.row = ligne;
+            cellule.dataset.col = col;
+
+            if (fixe[ligne][col]) {
+                cellule.textContent = String(currentSolution[ligne][col]);
+                cellule.classList.add('fixe');
+            }
+
+            bloc3x3.appendChild(cellule);
+        }
+
+        grilleSudoku.appendChild(bloc3x3);
+    }
+
+    initialiserSaisieCellules();
+    resetColors();
+}
+
 });
