@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku</title>
 </head>
 <body>
 
     <iframe id="background-video"
-        src="https://www.youtube.com/embed/KWw-rtnDVNE?autoplay=1&mute=1&controls=0&loop=1&playlist=KWw-rtnDVNE&rel=0&modestbranding=1&end=43"
+        src="https://www.youtube.com/embed/KWw-rtnDVNE?autoplay=1&mute=1&controls=0&loop=1&playlist=KWw-rtnDVNE&rel=0&modestbranding=1&start=3&end=43"
         frameborder="0"
         allow="autoplay; encrypted-media"
         allowfullscreen>
     </iframe>
 
     <h1 class="titre-centre">--Sudoku--</h1>
+    
     <div class="grille" id="grille-sudoku"></div>
-    <button onclick="btn-solution()">💡 Solution</button>
-    <button onclick="btn-refresh()">♻️ Refresh</button>
-    <button onclick="btn-gif()">🐒 GIF</button>
-    <button onclick="btn-sound()">📢 Sound</button>
+    
+    <div class="boutons-container">
+        <button class="bouton-banane bouton-solution" onclick="afficherSolution()">💡 Solution</button>
+        <button class="bouton-banane bouton-refresh" onclick="refreshGrille()">♻️ Refresh</button>
+        <button class="bouton-banane bouton-gif" onclick="lancerGif()">🐒 GIF</button>
+        <button class="bouton-banane bouton-sound" onclick="lancerMusique()">📢 Sound</button>
+    </div>
     
     <script src="script.js"></script> 
 </body>
