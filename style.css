@@ -2,21 +2,17 @@
     position: fixed; 
     min-width: 100%;
     min-height: 100%;
-    
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
     z-index: -100;
 }
 
 body {
     background-color: transparent; 
-    
     min-height: 100vh; 
     width: 100vw; 
     margin: 0;
-    
     display: flex;
     flex-direction: column; 
     align-items: center; 
@@ -33,10 +29,8 @@ body {
     grid-template-rows: repeat(3, 1fr);
     width: 450px;
     height: 450px;
-    
     border: 5px solid; 
     animation: arc-en-ciel 4s infinite linear; 
-    
     background-color: white; 
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
@@ -50,11 +44,9 @@ body {
 
 .cellule {
     border: 1px solid #ccc;
-    
     display: flex;
     justify-content: center;
     align-items: center;
-    
     font-size: 20px;
     font-weight: bold;
 }
@@ -63,18 +55,71 @@ body {
     0% {
         border-color: red; 
     }
-    
     33% {
         border-color: yellow; 
     }
-    
     66% {
         border-color: blue; 
     }
-    
     100% {
         border-color: red; 
     }
 }
 
-.bout
+.boutons-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.bouton-banane {
+    color: #333; 
+    font-weight: bold;
+    padding: 10px 25px; 
+    border: none;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+    
+    /* CURVATURE PLUS PRONONCÉE */
+    border-radius: 60px 20px 60px 20px / 20px 60px 20px 60px; 
+    transform: rotate(8deg); 
+    position: relative;
+    overflow: hidden; 
+}
+
+.bouton-banane::before {
+    content: ''; 
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-8deg);
+    
+    width: 8px;
+    height: 8px;
+    background-color: #5d4037; /* Marron pour le trognon */
+    
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.bouton-banane:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    transform: rotate(10deg) scale(1.05);
+}
+
+.bouton-solution {
+    background-color: #ffc107; 
+}
+
+.bouton-refresh {
+    background-color: #28a745; 
+}
+
+.bouton-gif {
+    background-color: #007bff; 
+}
+
+.bouton-sound {
+    background-color: #dc3545; 
+}
