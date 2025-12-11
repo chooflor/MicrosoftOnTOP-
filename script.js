@@ -1,195 +1,86 @@
-var baseSolution = [
-  [5,3,4,6,7,8,9,1,2],
-  [6,7,2,1,9,5,3,4,8],
-  [1,9,8,3,4,2,5,6,7],
-  [8,5,9,7,6,1,4,2,3],
-  [4,2,6,8,5,3,7,9,1],
-  [7,1,3,9,2,4,8,5,6],
-  [9,6,1,5,3,7,2,8,4],
-  [2,8,7,4,1,9,6,3,5],
-  [3,4,5,2,8,6,1,7,9]
+//--------------------------------------------------
+// 4 SOLUTIONS DE SUDOKU VALIDES
+//--------------------------------------------------
+
+var solutions = [
+  [
+    [5,3,4,6,7,8,9,1,2],
+    [6,7,2,1,9,5,3,4,8],
+    [1,9,8,3,4,2,5,6,7],
+    [8,5,9,7,6,1,4,2,3],
+    [4,2,6,8,5,3,7,9,1],
+    [7,1,3,9,2,4,8,5,6],
+    [9,6,1,5,3,7,2,8,4],
+    [2,8,7,4,1,9,6,3,5],
+    [3,4,5,2,8,6,1,7,9]
+  ],
+  [
+    [8,2,7,1,5,4,3,9,6],
+    [9,6,5,3,2,7,1,4,8],
+    [3,4,1,6,8,9,7,5,2],
+    [5,9,3,4,6,8,2,7,1],
+    [4,7,2,5,1,3,6,8,9],
+    [6,1,8,9,7,2,4,3,5],
+    [7,8,6,2,3,5,9,1,4],
+    [1,5,4,7,9,6,8,2,3],
+    [2,3,9,8,4,1,5,6,7]
+  ],
+  [
+    [2,9,6,3,1,8,5,7,4],
+    [5,8,4,7,2,9,1,3,6],
+    [7,1,3,6,5,4,8,9,2],
+    [6,2,5,8,9,1,3,4,7],
+    [9,3,1,4,7,5,6,2,8],
+    [8,4,7,2,6,3,9,1,5],
+    [1,6,2,5,8,7,4,3,9],
+    [4,7,9,1,3,2,5,8,6],
+    [3,5,8,9,4,6,7,2,1]
+  ],
+  [
+    [4,1,7,3,6,9,8,2,5],
+    [6,3,2,1,5,8,9,4,7],
+    [9,5,8,7,2,4,3,1,6],
+    [8,6,1,4,9,3,5,7,2],
+    [7,2,4,5,8,1,6,3,9],
+    [3,9,5,2,7,6,1,8,4],
+    [5,8,9,6,1,2,4,7,3],
+    [1,4,3,8,3,5,2,6,9],
+    [2,7,6,9,4,1,8,5,1]
+  ]
 ];
 
-var solutions = [];
 var currentSolution = null;
+var fixeMask = null;
 
-function transformerNombre(n, type) {
-  if (type === 0) {
-    return n;
-  } else if (type === 1) {
-    if (n === 1) return 2;
-    if (n === 2) return 1;
-    return n;
-  } else if (type === 2) {
-    if (n === 1) return 2;
-    if (n === 2) return 3;
-    if (n === 3) return 1;
-    return n;
-  } else if (type === 3) {
-    if (n === 4) return 9;
-    if (n === 9) return 4;
-    return n;
-  }
-  return n;
-}
-
-function creerSolutions() {
-  var type, i, j;
-  for (type = 0; type < 4; type++) {
-    var sol = [];
-    for (i = 0; i < 9; i++) {
-      sol[i] = [];
-      for (j = 0; j < 9; j++) {
-        sol[i][j] = transformerNombre(baseSolution[i][j], type);
-      }
-    }
-    solutions[type] = sol;
-  }
-}
-
-function recupererGrilleJoueur() {
-  var cellules = document.querySelectorAll('.cellule');
-  var grille = [];
-  var i;
-  for (i = 0; i < 9; i++) {
-    grille[i] = [0,0,0,0,0,0,0,0,0];
-  }
-  for (i = 0; i < cellules.length; i++) {
-    var cellule = cellules[i];
-    var ligne = parseInt(cellule.dataset.row, 10);
-    var col = parseInt(cellule.dataset.col, 10);
-    var valeur = parseInt(cellule.textContent, 10);
-    if (isNaN(valeur)) valeur = 0;
-    grille[ligne][col] = valeur;
-  }
-  return grille;
-}
-
-function contientChiffres1a9SansDoublon(tab) {
-  if (tab.length !== 9) return false;
-  var i;
-  for (i = 0; i < 9; i++) {
-    if (tab[i] < 1 || tab[i] > 9) return false;
-  }
-  var ensemble = new Set(tab);
-  return ensemble.size === 9;
-}
-
-function verifierLigne(grille, indexLigne) {
-  return contientChiffres1a9SansDoublon(grille[indexLigne]);
-}
-
-function verifierColonne(grille, indexColonne) {
-  var col = [];
-  var i;
-  for (i = 0; i < 9; i++) {
-    col.push(grille[i][indexColonne]);
-  }
-  return contientChiffres1a9SansDoublon(col);
-}
-
-function verifierRegion(grille, startLigne, startColonne) {
-  var valeurs = [];
-  var l, c;
-  for (l = 0; l < 3; l++) {
-    for (c = 0; c < 3; c++) {
-      valeurs.push(grille[startLigne + l][startColonne + c]);
-    }
-  }
-  return contientChiffres1a9SansDoublon(valeurs);
-}
-
-function resetColors() {
-  var cellules = document.querySelectorAll('.cellule');
-  var i;
-  for (i = 0; i < cellules.length; i++) {
-    cellules[i].style.backgroundColor = '';
-    cellules[i].style.color = '';
-  }
-}
-
-function surlignerErreurs() {
-  resetColors();
-  var cellules = document.querySelectorAll('.cellule');
-  var i, j;
-  for (i = 0; i < cellules.length; i++) {
-    var cellule = cellules[i];
-    var valeur = cellule.textContent.trim();
-    if (!/^[1-9]$/.test(valeur)) continue;
-    var row = parseInt(cellule.dataset.row, 10);
-    var col = parseInt(cellule.dataset.col, 10);
-    var erreur = false;
-    for (j = 0; j < cellules.length; j++) {
-      var autre = cellules[j];
-      if (autre === cellule) continue;
-      var v2 = autre.textContent.trim();
-      if (v2 !== valeur) continue;
-      var r2 = parseInt(autre.dataset.row, 10);
-      var c2 = parseInt(autre.dataset.col, 10);
-      var memeLigne = row === r2;
-      var memeCol = col === c2;
-      var memeRegion =
-        Math.floor(row / 3) === Math.floor(r2 / 3) &&
-        Math.floor(col / 3) === Math.floor(c2 / 3);
-      if (memeLigne || memeCol || memeRegion) {
-        erreur = true;
-        autre.style.backgroundColor = '#b7d4e4';
-      }
-    }
-    if (erreur) {
-      cellule.style.backgroundColor = '#f7c5c5';
-      cellule.style.color = '#c00000';
-    }
-  }
-}
-
-function initialiserSaisieCellules() {
-  var cellules = document.querySelectorAll('.cellule');
-  var i;
-  for (i = 0; i < cellules.length; i++) {
-    var cellule = cellules[i];
-    if (!cellule.classList.contains('fixe')) {
-      cellule.contentEditable = 'true';
-      cellule.addEventListener('input', function () {
-        var txt = this.textContent.replace(/\s/g, '');
-        if (txt.length > 1) txt = txt.charAt(0);
-        if (!/^[1-9]$/.test(txt)) txt = '';
-        this.textContent = txt;
-        surlignerErreurs();
-      });
-    }
-  }
-}
+//--------------------------------------------------
+// GÉNÉRATION DES INDICES (MAX 2 PAR BLOC 3×3)
+//--------------------------------------------------
 
 function genererIndicesAleatoires() {
   var fixe = [];
-  var i, j;
-  for (i = 0; i < 9; i++) {
+  for (let i = 0; i < 9; i++) {
     fixe[i] = [];
-    for (j = 0; j < 9; j++) {
-      fixe[i][j] = false;
-    }
+    for (let j = 0; j < 9; j++) fixe[i][j] = false;
   }
 
-  var blocLigne, blocCol, cells, k, nb, tmp, r, c;
-  for (blocLigne = 0; blocLigne < 3; blocLigne++) {
-    for (blocCol = 0; blocCol < 3; blocCol++) {
-      cells = [];
-      for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-          r = blocLigne * 3 + i;
-          c = blocCol * 3 + j;
-          cells.push({ ligne: r, col: c });
+  for (let blocLigne = 0; blocLigne < 3; blocLigne++) {
+    for (let blocCol = 0; blocCol < 3; blocCol++) {
+      
+      let cells = [];
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          cells.push({
+            ligne: blocLigne * 3 + i,
+            col: blocCol * 3 + j
+          });
         }
       }
-      for (i = cells.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        tmp = cells[i];
-        cells[i] = cells[j];
-        cells[j] = tmp;
-      }
-      nb = Math.floor(Math.random() * 3);
-      for (k = 0; k < nb; k++) {
+
+      cells.sort(() => Math.random() - 0.5);
+
+      let nb = Math.floor(Math.random() * 3); // 0 à 2 chiffres
+
+      for (let k = 0; k < nb; k++) {
         fixe[cells[k].ligne][cells[k].col] = true;
       }
     }
@@ -198,130 +89,179 @@ function genererIndicesAleatoires() {
   return fixe;
 }
 
-function afficherSolution() {
-  if (!currentSolution) return;
-  var cellules = document.querySelectorAll('.cellule');
-  var i;
-  for (i = 0; i < cellules.length; i++) {
-    var cellule = cellules[i];
-    var row = parseInt(cellule.dataset.row, 10);
-    var col = parseInt(cellule.dataset.col, 10);
-    cellule.textContent = String(currentSolution[row][col]);
-    cellule.classList.add('fixe');
-    cellule.contentEditable = 'false';
+//--------------------------------------------------
+// AFFICHAGE DE LA GRILLE
+//--------------------------------------------------
+
+function construireGrille() {
+  var grille = document.getElementById("grille-sudoku");
+  grille.innerHTML = "";
+
+  for (let bloc = 0; bloc < 9; bloc++) {
+    let blocDiv = document.createElement("div");
+    blocDiv.classList.add("grille-3x3");
+
+    for (let cell = 0; cell < 9; cell++) {
+      
+      let cellule = document.createElement("div");
+      cellule.classList.add("cellule");
+
+      let blocLigne = Math.floor(bloc / 3);
+      let blocCol = bloc % 3;
+      let cellLigne = Math.floor(cell / 3);
+      let cellCol = cell % 3;
+
+      let row = blocLigne * 3 + cellLigne;
+      let col = blocCol * 3 + cellCol;
+
+      cellule.dataset.row = row;
+      cellule.dataset.col = col;
+
+      if (fixeMask[row][col]) {
+        cellule.textContent = currentSolution[row][col];
+        cellule.classList.add("fixe");
+        cellule.contentEditable = "false";
+      } else {
+        cellule.contentEditable = "true";
+      }
+
+      cellule.addEventListener("input", function () {
+        let val = this.textContent.replace(/\s/g, "");
+        if (!/^[1-9]$/.test(val)) val = "";
+        this.textContent = val;
+        surlignerErreurs();
+      });
+
+      blocDiv.appendChild(cellule);
+    }
+
+    grille.appendChild(blocDiv);
   }
+
+  surlignerErreurs();
+}
+
+//--------------------------------------------------
+// ERREURS : COLORATION
+//--------------------------------------------------
+
+function resetColors() {
+  document.querySelectorAll(".cellule").forEach(c => {
+    c.style.backgroundColor = "";
+    c.style.color = "";
+  });
+}
+
+function surlignerErreurs() {
+  resetColors();
+
+  let cells = document.querySelectorAll(".cellule");
+
+  cells.forEach(cell => {
+
+    let val = cell.textContent.trim();
+    if (!/^[1-9]$/.test(val)) return;
+
+    let row = parseInt(cell.dataset.row);
+    let col = parseInt(cell.dataset.col);
+
+    let error = false;
+
+    cells.forEach(other => {
+      if (other === cell) return;
+
+      let v2 = other.textContent.trim();
+      if (v2 !== val) return;
+
+      let r2 = parseInt(other.dataset.row);
+      let c2 = parseInt(other.dataset.col);
+
+      if (
+        row === r2 ||
+        col === c2 ||
+        (Math.floor(row / 3) === Math.floor(r2 / 3) &&
+         Math.floor(col / 3) === Math.floor(c2 / 3))
+      ) {
+        error = true;
+        other.style.backgroundColor = "#b7d4e4";
+      }
+    });
+
+    if (error) {
+      cell.style.backgroundColor = "#f7c5c5";
+      cell.style.color = "#900";
+    }
+  });
+}
+
+
+function afficherSolution() {
+  let cells = document.querySelectorAll(".cellule");
+
+  cells.forEach(cell => {
+    let r = cell.dataset.row;
+    let c = cell.dataset.col;
+    cell.textContent = currentSolution[r][c];
+    cell.classList.add("fixe");
+    cell.contentEditable = "false";
+  });
+
   resetColors();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  creerSolutions();
 
-  var grilleSudoku = document.getElementById('grille-sudoku');
-  var i, j;
 
-  var indexSolution = Math.floor(Math.random() * 4);
-  currentSolution = solutions[indexSolution];
-
-  var fixe = genererIndicesAleatoires();
-
-  for (i = 0; i < 9; i++) {
-    var bloc3x3 = document.createElement('div');
-    bloc3x3.classList.add('grille-3x3');
-
-    for (j = 0; j < 9; j++) {
-      var cellule = document.createElement('div');
-      cellule.classList.add('cellule');
-
-      var blocLigne = Math.floor(i / 3);
-      var blocCol = i % 3;
-      var cellLigne = Math.floor(j / 3);
-      var cellCol = j % 3;
-      var ligne = blocLigne * 3 + cellLigne;
-      var col = blocCol * 3 + cellCol;
-
-      cellule.dataset.row = ligne;
-      cellule.dataset.col = col;
-
-      if (fixe[ligne][col]) {
-        cellule.textContent = String(currentSolution[ligne][col]);
-        cellule.classList.add('fixe');
-      }
-
-      bloc3x3.appendChild(cellule);
-    }
-
-    grilleSudoku.appendChild(bloc3x3);
-  }
-
-  initialiserSaisieCellules();
-  surlignerErreurs();
-});
-
-document.addEventListener('keydown', function (e) {
-  var active = document.activeElement;
-  if (!active || !active.classList.contains('cellule')) return;
-
-  var row = parseInt(active.dataset.row, 10);
-  var col = parseInt(active.dataset.col, 10);
-
-  if (e.key === 'ArrowRight') {
-    col = (col + 1) % 9;
-  } else if (e.key === 'ArrowLeft') {
-    col = (col - 1 + 9) % 9;
-  } else if (e.key === 'ArrowUp') {
-    row = (row - 1 + 9) % 9;
-  } else if (e.key === 'ArrowDown') {
-    row = (row + 1) % 9;
-  } else {
-    return;
-  }
-
-  e.preventDefault();
-  var suivante = document.querySelector('.cellule[data-row="' + row + '"][data-col="' + col + '"]');
-  if (suivante) suivante.focus();
-  function refreshGrille() {
-    var grilleSudoku = document.getElementById('grille-sudoku');
-    grilleSudoku.innerHTML = "";
-
-    creerSolutions();
-
-    var indexSolution = Math.floor(Math.random() * 4);
-    currentSolution = solutions[indexSolution];
-
-    var fixe = genererIndicesAleatoires();
-    var i, j;
-
-    for (i = 0; i < 9; i++) {
-        var bloc3x3 = document.createElement('div');
-        bloc3x3.classList.add('grille-3x3');
-
-        for (j = 0; j < 9; j++) {
-            var cellule = document.createElement('div');
-            cellule.classList.add('cellule');
-
-            var blocLigne = Math.floor(i / 3);
-            var blocCol = i % 3;
-            var cellLigne = Math.floor(j / 3);
-            var cellCol = j % 3;
-            var ligne = blocLigne * 3 + cellLigne;
-            var col = blocCol * 3 + cellCol;
-
-            cellule.dataset.row = ligne;
-            cellule.dataset.col = col;
-
-            if (fixe[ligne][col]) {
-                cellule.textContent = String(currentSolution[ligne][col]);
-                cellule.classList.add('fixe');
-            }
-
-            bloc3x3.appendChild(cellule);
-        }
-
-        grilleSudoku.appendChild(bloc3x3);
-    }
-
-    initialiserSaisieCellules();
-    resetColors();
+function refreshGrille() {
+  nouvelleGrille();
 }
 
+
+
+function lancerGif() {
+  console.log("GIF activé !");
+}
+
+function lancerMusique() {
+  console.log("Musique activée !");
+}
+
+
+
+document.addEventListener("keydown", function (e) {
+  let active = document.activeElement;
+  if (!active.classList.contains("cellule")) return;
+
+  let row = parseInt(active.dataset.row);
+  let col = parseInt(active.dataset.col);
+
+  if (e.key === "ArrowRight") col = (col + 1) % 9;
+  else if (e.key === "ArrowLeft") col = (col - 1 + 9) % 9;
+  else if (e.key === "ArrowUp") row = (row - 1 + 9) % 9;
+  else if (e.key === "ArrowDown") row = (row + 1) % 9;
+  else return;
+
+  e.preventDefault();
+
+  let next = document.querySelector(`.cellule[data-row="${row}"][data-col="${col}"]`);
+  if (next) next.focus();
+});
+
+
+
+function nouvelleGrille() {
+  currentSolution = solutions[Math.floor(Math.random() * 4)];
+  fixeMask = genererIndicesAleatoires();
+  construireGrille();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+  nouvelleGrille();
+
+
+  document.getElementById("btn-solution").addEventListener("click", afficherSolution);
+  document.getElementById("btn-refresh").addEventListener("click", refreshGrille);
+  document.getElementById("btn-gif").addEventListener("click", lancerGif);
+  document.getElementById("btn-sound").addEventListener("click", lancerMusique);
 });
