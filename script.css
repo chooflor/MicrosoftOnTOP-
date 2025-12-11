@@ -1,0 +1,40 @@
+body {
+    /* Utiliser Flexbox sur le body pour centrer le tout verticalement et horizontalement */
+    display: flex;
+    flex-direction: column; /* Aligner les éléments (h1, grille) en colonne */
+    align-items: center; /* Centrer horizontalement tout le contenu du body */
+    font-family: Arial, sans-serif;
+}
+
+.titre-centre {
+    text-align: center;
+}
+
+.grille {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 450px;
+    height: 450px;
+    border: 3px solid black;
+}
+
+.grille-3x3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    border: 1px solid black;
+}
+
+.cellule {
+    /* Bordures fines à l'intérieur des sous-blocs */
+    border: 1px solid #ccc;
+    
+    /* Centrer le contenu (le chiffre) dans chaque cellule */
+    display: flex;
+    justify-content: center; /* Horizontalement */
+    align-items: center; /* Verticalement */
+    
+    font-size: 20px;
+    font-weight: bold;
+}
