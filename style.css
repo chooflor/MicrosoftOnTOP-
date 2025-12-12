@@ -80,8 +80,6 @@ body {
     cursor: pointer;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
     transition: all 0.2s ease;
-    
-    /* CURVATURE PLUS PRONONCÉE */
     border-radius: 60px 20px 60px 20px / 20px 60px 20px 60px; 
     transform: rotate(8deg); 
     position: relative;
@@ -94,11 +92,9 @@ body {
     top: -5px;
     left: 50%;
     transform: translateX(-50%) rotate(-8deg);
-    
     width: 8px;
     height: 8px;
-    background-color: #5d4037; /* Marron pour le trognon */
-    
+    background-color: #5d4037; 
     border-radius: 50%;
     z-index: 10;
 }
