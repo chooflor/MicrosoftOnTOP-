@@ -219,15 +219,40 @@ function refreshGrille() {
 
 var videoLancee = false;
 
+var videoChargee = false;
+var videoEnLecture = false;
+
+function envoyerCommandeYT(command) {
+  var iframe = document.getElementById("background-video");
+  if (!iframe || !iframe.contentWindow) return;
+
+  iframe.contentWindow.postMessage(JSON.stringify({
+    event: "command",
+    func: command,
+    args: []
+  }), "*");
+}
+
 function lancerGif() {
-  var iframe = document.getElementById('background-video');
+  var iframe = document.getElementById("background-video");
   if (!iframe) return;
 
-  if (!videoLancee) {
-    iframe.src = "https://www.youtube.com/embed/KWw-rtnDVNE?autoplay=1&mute=1&controls=0&loop=1&playlist=KWw-rtnDVNE&rel=0&modestbranding=1&end=43";
-    videoLancee = true;
+  if (!videoChargee) {
+    iframe.src = "https://www.youtube.com/embed/KWw-rtnDVNE?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=KWw-rtnDVNE&rel=0&modestbranding=1&end=43";
+    videoChargee = true;
+    videoEnLecture = true;
+    return;
+  }
+
+  if (videoEnLecture) {
+    envoyerCommandeYT("pauseVideo");
+    videoEnLecture = false;
+  } else {
+    envoyerCommandeYT("playVideo");
+    videoEnLecture = true;
   }
 }
+
 
 
 function lancerMusique() {
