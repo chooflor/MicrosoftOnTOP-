@@ -116,14 +116,20 @@ function construireGrille() {
 
       cellule.dataset.row = row;
       cellule.dataset.col = col;
+      cellule.style.position = "relative";
+      cellule.style.zIndex = "2";
 
-      if (fixeMask[row][col]) {
-        cellule.textContent = currentSolution[row][col];
-        cellule.classList.add("fixe");
-        cellule.contentEditable = "false";
-      } else {
-        cellule.contentEditable = "true";
-      }
+
+if (fixeMask[row][col]) {
+    console.log("INDICE", row, col);
+    cellule.textContent = String(currentSolution[row][col]);
+    cellule.contentEditable = "false";
+    cellule.style.backgroundColor = "#d9d9d9";
+    cellule.style.fontWeight = "bold";
+} else {
+    cellule.contentEditable = "true";
+}
+
 
       cellule.addEventListener("input", function () {
         let val = this.textContent.replace(/\s/g, "");
@@ -139,6 +145,8 @@ function construireGrille() {
   }
 
   surlignerErreurs();
+
+  
 }
 
 //--------------------------------------------------
@@ -147,10 +155,18 @@ function construireGrille() {
 
 function resetColors() {
   document.querySelectorAll(".cellule").forEach(c => {
-    c.style.backgroundColor = "";
-    c.style.color = "";
+    if (c.contentEditable === "false") {
+      c.style.backgroundColor = "#d9d9d9";
+      c.style.fontWeight = "bold";
+      c.style.color = "";
+    } else {
+      c.style.backgroundColor = "";
+      c.style.color = "";
+      c.style.fontWeight = "";
+    }
   });
 }
+
 
 function surlignerErreurs() {
   resetColors();
