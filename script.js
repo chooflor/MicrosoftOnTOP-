@@ -270,9 +270,45 @@ function lancerGif() {
 }
 
 
+//--------------------------------------------------
+// MUSIC YOUTUBE (PLAY / PAUSE)
+//--------------------------------------------------
+
+var musicChargee = false;
+var musicEnLecture = false;
+
+function envoyerCommandeMusic(cmd) {
+  var iframe = document.getElementById("audio-music");
+  if (!iframe || !iframe.contentWindow) return;
+
+  iframe.contentWindow.postMessage(JSON.stringify({
+    event: "command",
+    func: cmd,
+    args: []
+  }), "*");
+}
 
 function lancerMusique() {
-  console.log("Musique activée !");
+  var iframe = document.getElementById("audio-music");
+  if (!iframe) return;
+
+  // 1er clic → charger + play
+  if (!musicChargee) {
+    iframe.src =
+      "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&autoplay=1&controls=0";
+    musicChargee = true;
+    musicEnLecture = true;
+    return;
+  }
+
+  // Play / Pause
+  if (musicEnLecture) {
+    envoyerCommandeMusic("pauseVideo");
+    musicEnLecture = false;
+  } else {
+    envoyerCommandeMusic("playVideo");
+    musicEnLecture = true;
+  }
 }
 
 
