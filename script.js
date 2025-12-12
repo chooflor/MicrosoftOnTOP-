@@ -217,9 +217,18 @@ function refreshGrille() {
 
 
 
+var videoLancee = false;
+
 function lancerGif() {
-  console.log("GIF activé !");
+  var iframe = document.getElementById('background-video');
+  if (!iframe) return;
+
+  if (!videoLancee) {
+    iframe.src = "https://www.youtube.com/embed/KWw-rtnDVNE?autoplay=1&mute=1&controls=0&loop=1&playlist=KWw-rtnDVNE&rel=0&modestbranding=1&end=43";
+    videoLancee = true;
+  }
 }
+
 
 function lancerMusique() {
   console.log("Musique activée !");
