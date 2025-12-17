@@ -1,6 +1,4 @@
-//--------------------------------------------------
-// 4 SOLUTIONS DE SUDOKU VALIDES
-//--------------------------------------------------
+
 
 var solutions = [
   [
@@ -52,9 +50,6 @@ var solutions = [
 var currentSolution = null;
 var fixeMask = null;
 
-//--------------------------------------------------
-// GÉNÉRATION DES INDICES (MAX 2 PAR BLOC 3×3)
-//--------------------------------------------------
 
 function genererIndicesAleatoires() {
   var fixe = [];
@@ -78,7 +73,7 @@ function genererIndicesAleatoires() {
 
       cells.sort(() => Math.random() - 0.5);
 
-      let nb = Math.floor(Math.random() * 3); // 0 à 2 chiffres
+      let nb = Math.floor(Math.random() * 3); 
 
       for (let k = 0; k < nb; k++) {
         fixe[cells[k].ligne][cells[k].col] = true;
@@ -89,9 +84,6 @@ function genererIndicesAleatoires() {
   return fixe;
 }
 
-//--------------------------------------------------
-// AFFICHAGE DE LA GRILLE
-//--------------------------------------------------
 
 function construireGrille() {
   var grille = document.getElementById("grille-sudoku");
@@ -149,9 +141,6 @@ if (fixeMask[row][col]) {
   
 }
 
-//--------------------------------------------------
-// ERREURS : COLORATION
-//--------------------------------------------------
 
 function resetColors() {
   document.querySelectorAll(".cellule").forEach(c => {
@@ -270,10 +259,6 @@ function lancerGif() {
 }
 
 
-//--------------------------------------------------
-// MUSIC YOUTUBE (PLAY / PAUSE)
-//--------------------------------------------------
-
 var musicChargee = false;
 var musicEnLecture = false;
 
@@ -292,7 +277,6 @@ function lancerMusique() {
   var iframe = document.getElementById("audio-music");
   if (!iframe) return;
 
-  // 1er clic → charger + play
   if (!musicChargee) {
     iframe.src =
       "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&autoplay=1&controls=0";
@@ -301,7 +285,6 @@ function lancerMusique() {
     return;
   }
 
-  // Play / Pause
   if (musicEnLecture) {
     envoyerCommandeMusic("pauseVideo");
     musicEnLecture = false;
@@ -344,6 +327,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   nouvelleGrille();
+
+
+
+var musicChargee = false;
+var musicEnLecture = false;
+
+function envoyerCommandeMusic(func, args) {
+  var iframe = document.getElementById("audio-music");
+  if (!iframe || !iframe.contentWindow) return;
+
+  iframe.contentWindow.postMessage(JSON.stringify({
+    event: "command",
+    func: func,
+    args: args || []
+  }), "*");
+}
+
+function lancerMusique() {
+  var iframe = document.getElementById("audio-music");
+  if (!iframe) return;
+
+  if (!musicChargee) {
+    iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&autoplay=1&controls=0&playsinline=1";
+    musicChargee = true;
+    musicEnLecture = true;
+
+    setTimeout(function () {
+      envoyerCommandeMusic("unMute");
+      envoyerCommandeMusic("setVolume", [100]);
+    }, 800);
+
+    return;
+  }
+
+  if (musicEnLecture) {
+    envoyerCommandeMusic("pauseVideo");
+    musicEnLecture = false;
+  } else {
+    envoyerCommandeMusic("playVideo");
+    setTimeout(function () {
+      envoyerCommandeMusic("unMute");
+      envoyerCommandeMusic("setVolume", [100]);
+    }, 200);
+    musicEnLecture = true;
+  }
+}
+
+
+
 
 
   document.getElementById("btn-solution").addEventListener("click", afficherSolution);
