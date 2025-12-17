@@ -367,8 +367,4 @@ function lancerMusique() {
   }
 }
 
-  document.getElementById("btn-solution").addEventListener("click", afficherSolution);
-  document.getElementById("btn-refresh").addEventListener("click", refreshGrille);
-  document.getElementById("btn-gif").addEventListener("click", lancerGif);
-  document.getElementById("btn-sound").addEventListener("click", lancerMusique);
 });
