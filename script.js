@@ -214,13 +214,9 @@ function afficherSolution() {
   resetColors();
 }
 
-
-
 function refreshGrille() {
   nouvelleGrille();
 }
-
-
 
 var videoLancee = false;
 
@@ -258,7 +254,6 @@ function lancerGif() {
   }
 }
 
-
 var musicChargee = false;
 var musicEnLecture = false;
 
@@ -293,8 +288,6 @@ function lancerMusique() {
     musicEnLecture = true;
   }
 }
-
-
 
 document.addEventListener("keydown", function (e) {
   let active = document.activeElement;
@@ -373,10 +366,6 @@ function lancerMusique() {
     musicEnLecture = true;
   }
 }
-
-
-
-
 
   document.getElementById("btn-solution").addEventListener("click", afficherSolution);
   document.getElementById("btn-refresh").addEventListener("click", refreshGrille);
