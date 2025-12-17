@@ -1,5 +1,5 @@
 :root {
-    /* VARIABLES CSS */
+    /*VARIABLES CSS*/
     --grille-taille: 450px; 
     --animation-duree: 4s; 
 }
@@ -29,7 +29,7 @@ body {
     text-align: center;
 }
 
-/* Conteneur de la grille */
+/*Conteneur de la grille*/
 .jeu-et-saisie {
     display: flex; 
     gap: 20px; 
@@ -43,7 +43,7 @@ body {
     width: var(--grille-taille);
     height: var(--grille-taille);
     
-    /* Animation RGB */
+    /*Animation RGB*/
     border: 5px solid; 
     animation: arc-en-ciel var(--animation-duree) infinite linear; 
     
@@ -68,7 +68,7 @@ body {
     outline: none;
 }
 
-/* --- DÉFINITION DE L'ANIMATION RGB --- */
+/*DÉFINITION DE L'ANIMATION RGB*/
 @keyframes arc-en-ciel {
     0% { border-color: red; }
     33% { border-color: yellow; }
@@ -76,7 +76,7 @@ body {
     100% { border-color: red; }
 }
 
-/* --- BOUTONS BANANE --- */
+/*BOUTONS BANANE*/
 .boutons-container {
     display: flex;
     gap: 15px;
